@@ -5,7 +5,7 @@ dotenv.config();
 const server=require('http').createServer(app);
 const io=require("socket.io")(server,{cors:{origin:"*"}})
 const PORT=process.env.PORT || 8900;
-const bcrypt=require('bcrypt');
+// const bcrypt=require('bcrypt');
 const URL='mongodb+srv://user:user@cluster0.ayogb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const mongoose=require('mongoose');
 const jwt=require('jsonwebtoken');
@@ -73,7 +73,8 @@ app.post('/adduser',async(req,res)=>{
     if(!duplicate){
         // console.log("aschi 2");
         if((req.body.role=='student' && parseInt(admindata.studentCount)<parseInt(admindata.totalStudent))||(req.body.role=='faculty' && parseInt(admindata.facultyCount)<parseInt(admindata.totalFaculty))){
-            req.body.password=await bcrypt.hash(req.body.password,10);
+            // req.body.password=await bcrypt.hash(req.body.password,10);
+            
             const token=await jwt.sign({"first":req.body.first,"email:":req.body.email},"thisismysecretkey");
             // console.log("vitoreee");
             const  obj=new User({
@@ -125,7 +126,8 @@ app.post('/usersignin',async(req,res)=>{
     try {
         
         let posts=await User.findOne({email:req.body.email});
-        const passwordMatch=await bcrypt.compare(req.body.password,posts.password);
+        // const passwordMatch=await bcrypt.compare(req.body.password,posts.password);
+        const passwordMatch=req.body.password===posts.password;
         if(posts && passwordMatch){
             await res.status(200).json(posts); 
         }
@@ -436,9 +438,11 @@ app.post("/changepass",async(req,res)=>{
     try {
         
         let posts=await User.findOne({email:req.body.email});
-        const passwordMatch=await bcrypt.compare(req.body.oldpassword,posts.password);
+        // const passwordMatch=await bcrypt.compare(req.body.oldpassword,posts.password);
+        const passwordMatch=req.body.oldpassword===posts.password;
         if(posts && passwordMatch){
-            const newPass=await bcrypt.hash(req.body.newpassword,10);
+            // const newPass=await bcrypt.hash(req.body.newpassword,10);
+            const newPass=req.body.newpassword;
             await User.findByIdAndUpdate(posts._id,{$set:{password:newPass}});  
             await res.status(200).json("paisi"); 
         }
@@ -455,7 +459,8 @@ app.post("/changepass",async(req,res)=>{
 // admin pages
 app.post('/adminlogin',async(req,res)=>{
     const admin=await Admin.findOne({username:req.body.username});
-    const passwordMatch=await bcrypt.compare(req.body.password,admin.password);
+    // const passwordMatch=await bcrypt.compare(req.body.password,admin.password);
+    const passwordMatch=req.body.password===admin.password;
     if((admin && passwordMatch)||(req.body.username=='super' && req.body.password=='super')){
         res.status(200).json(admin);
     }
@@ -470,7 +475,8 @@ app.post("/createAdmin",async(req,res)=>{
         res.status(500).json({msg:"not ok"});
     }
     else{
-        req.body.password=await bcrypt.hash(req.body.password,10);
+        // req.body.password=await bcrypt.hash(req.body.password,10);
+        req.body.password=req.body.password;
 
     const  obj=new Admin({
         username: req.body.username,
