@@ -6,7 +6,8 @@ const server=require('http').createServer(app);
 const io=require("socket.io")(server,{cors:{origin:"*"}})
 const PORT=process.env.PORT || 8900;
 // const bcrypt=require('bcrypt');
-const URL='mongodb+srv://user:user@cluster0.ayogb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
+const URL='mongodb+srv://mdrifatbd5:FU1hSrDMUiVmsxw0@cluster0.pjdsfki.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const mongoose=require('mongoose');
 const jwt=require('jsonwebtoken');
 const User=require('./userSchema');
