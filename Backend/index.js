@@ -4,7 +4,7 @@ const dotenv=require("dotenv");
 dotenv.config();
 const server=require('http').createServer(app);
 const io=require("socket.io")(server,{cors:{origin:"*"}})
-const PORT=process.env.PORT || 8000;
+const PORT=process.env.PORT || 8900;
 const bcrypt=require('bcrypt');
 const URL='mongodb+srv://user:user@cluster0.ayogb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const mongoose=require('mongoose');
@@ -523,3 +523,5 @@ if(process.env.NODE_ENV=='production'){
 server.listen(PORT,()=>{
     console.log("server is listening on PORT "+PORT);
 })
+
+module.exports=app;
